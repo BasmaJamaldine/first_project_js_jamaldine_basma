@@ -3,7 +3,7 @@ let dataBase = [
 ];
 
 class Utilisateur {
-    constructor(nomComplet = '', email = '', age = 0, motPasse = '') {
+    constructor(nomComplet, email, age, motPasse) {
         this.nomComplet = nomComplet;
         this.email = email;
         this.age = age;
@@ -40,6 +40,7 @@ class Utilisateur {
                 }
                 exist = dataBase.find(e => e.email === email);
             }
+            
             this.email = email;
         };
 
@@ -64,30 +65,75 @@ class Utilisateur {
             while (motPasse.replace(/\s+/g, '').length !== motPasse.length || motPasse.length < 7 || !/[#@\-+*/]/.test(motPasse) || /\s/.test(motPasse)) {
                 motPasse = prompt("Syntaxe du mot de passe incorrecte. Entrez votre mot de passe à nouveau :").trim();
             }
+           
             this.motPasse = motPasse;
+           
+        };
+        
+        const confirmMotPasse = () => {
+            let confirmationMotPasse = prompt("Confirmez votre mot de passe").trim();
+            return confirmationMotPasse === this.motPasse;
         };
 
         verificationNom();
         verificationEmail();
         verificationAge();
         verificationMotPasse();
-       
-        alert("Inscription réussie !");
+        
+        if (confirmMotPasse()) {
+            dataBase.push({
+                nomcomplet: this.nomComplet,
+                email: this.email,
+                age: this.age,
+                motPasse: this.motPasse
+            });
+            alert("Inscription réussie !");
+        } else {
+            alert("Inscription échouée. Mot de passe incorrect.");
+            return;
+        }
+      
     }
+
     seConnecter() {
         let email = prompt("Entrez votre email").trim().toLowerCase();
         let motPasse = prompt("Entrez votre mot de passe").trim();
 
-        console.log("Email entré :", email);
-        console.log("Mot de passe entré :", motPasse);
-
         let utilisateur = dataBase.find(e => e.email === email && e.motPasse === motPasse);
 
         if (utilisateur) {
+            console.log("Email entré :", email);
+            console.log("Mot de passe entré :", motPasse);
             alert("Vous êtes connecté !");
         } else {
             alert("Email ou mot de passe incorrect. Veuillez réessayer.");
         }
+    }
+
+    changerMotdePasse() {
+        let email = prompt("Entrez votre email");
+        let user = dataBase.find(user => user.email === email);
+        if (!user) {
+            alert("Email non trouvé.");
+            return;
+        }
+    
+        let newMotPasse = prompt("Entrez votre nouveau mot de passe:");
+        let newConfirmatiMotPasse = prompt("Confirmez votre nouveau mot de passe:");
+    
+        while (newMotPasse.replace(/\s+/g, '').length !== newMotPasse.length || newMotPasse.length < 7 || !/[#@\-+*/]/.test(newMotPasse) || /\s/.test(newMotPasse) || newMotPasse !== newConfirmatiMotPasse) {
+            if (newMotPasse !== newConfirmatiMotPasse) {
+                alert("Les mots de passe ne correspondent pas.");
+            } else {
+                alert("Mot de passe invalide. Il doit contenir au moins 7 caractères et un caractère spécial.");
+            }
+            newMotPasse = prompt("Entrez votre nouveau mot de passe:");
+            newConfirmatiMotPasse = prompt("Confirmez votre nouveau mot de passe:");
+        }
+        
+        user.motPasse = newMotPasse;
+        alert("Mot de passe changé avec succès !");
+        console.table(dataBase); 
     }
 }
 
@@ -102,7 +148,8 @@ const menuPrincipal = () => {
             let utilisateur = new Utilisateur();
             utilisateur.seConnecter();
         } else if (choix.toLowerCase() === 'changer le mot de passe') {
-           
+            let utilisateur = new Utilisateur();
+            utilisateur.changerMotdePasse();
         } else {
             alert("Choix non valide. Veuillez réessayer.");
         }
@@ -110,11 +157,5 @@ const menuPrincipal = () => {
     }
     alert("Au revoir !");
 }
-dataBase.push({
-    nomcomplet: this.nomComplet,
-    email: this.email,
-    age: this.age,
-    motPasse: this.motPasse
-});
 
 menuPrincipal();
