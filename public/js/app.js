@@ -20,6 +20,7 @@ class Utilisateur {
                 nom = prompt("Le nom ne doit pas contenir de chiffres ou caractères spéciaux. Entrez votre nom à nouveau :").trim()
             }
             this.nomComplet = nom.split(' ').map(ele => ele.charAt(0).toUpperCase() + ele.slice(1).toLowerCase()).join(' ')
+            console.log(`votre nom complet est ${this.nomComplet}`);
         }
 
         const verificationEmail = () => {
@@ -44,6 +45,7 @@ class Utilisateur {
                 exist = dataBase.find(e => e.email === email)
             }
             this.email = email
+            console.log(`votre email est ${this.email}`);
         }
 
         const verificationAge = () => {
@@ -60,6 +62,7 @@ class Utilisateur {
                 }
             }
             this.age = parseInt(age)
+            console.log(`votre age est ${this.age}`)
         }
 
         const verificationMotPasse = () => {
@@ -108,7 +111,7 @@ class Utilisateur {
             console.log("Mot de passe entré :", motPasse)
             alert("Vous êtes connecté ")
             console.log("Vous êtes connecté ");
-           
+
             this.nomComplet = utilisateur.nomcomplet
             this.email = utilisateur.email
             this.age = utilisateur.age
@@ -116,13 +119,13 @@ class Utilisateur {
             this.montant = utilisateur.montant
             this.historique = utilisateur.historique
             this.credit = utilisateur.credit
-             this.reduireCredit()
+            this.reduireCredit()
             let banque = new Banque(this)
             banque.menuBanque()
         } else {
             alert("Email ou mot de passe incorrect. Veuillez réessayer.")
         }
-        
+
     }
     reduireCredit() {
         let utilisateur = dataBase.find(e => e.email === this.email)
@@ -169,24 +172,24 @@ class Banque {
     constructor(utilisateur) {
         this.utilisateur = utilisateur
     }
-// ? menu contient que les choix de banque
+    // ? menu contient que les choix de banque
     menuBanque() {
-        let choixBanque = prompt(`Bienvenue ${this.utilisateur.nomComplet} votre Montant actuel est ${this.utilisateur.montant} Dh\nChoisissez une option :\nDéconnexion\nRetrait d'argent\nDéposer de l'argent\nPrendre un crédit\nInvestir\nHistorique`).trim().toLowerCase()
+        let choixBanque = prompt(`Bienvenue ${this.utilisateur.nomComplet} votre Montant actuel est ${this.utilisateur.montant} Dh\nChoisissez une option :\nDéconnexion\nRetrait d'argent\nDéposer de l'argent\nPrendre un crédit\nInvestir\nHistorique`).toLowerCase()
         while (choixBanque !== "déconnexion") {
             if (choixBanque.toLowerCase() === "retrait d'argent") {
-                
-            } else if (choixBanque.toLowerCase()  === "déposer de l'argent") {
+                this.retrait()
+            } else if (choixBanque.toLowerCase() === "déposer de l'argent") {
                 this.depotDargent()
-            } else if (choixBanque.toLowerCase()  === "prendre un crédit") {
+            } else if (choixBanque.toLowerCase() === "prendre un crédit") {
                 this.credit()
-            } else if (choixBanque.toLowerCase()  === "investir") {
-                
-            } else if (choixBanque.toLowerCase()  === "historique") {
+            } else if (choixBanque.toLowerCase() === "investir") {
+
+            } else if (choixBanque.toLowerCase() === "historique") {
                 this.afficherHistorique()
             } else {
                 alert("Choix non valide. Veuillez réessayer.")
             }
-            choixBanque = prompt(`Bienvenue ${this.utilisateur.nomComplet} votre Montant actuel est ${this.utilisateur.montant} Dh\nChoisissez une option :\nDéconnexion\nRetrait d'argent\nDéposer de l'argent\nPrendre un crédit\nInvestir\nHistorique`).trim().toLowerCase()
+            choixBanque = prompt(`Bienvenue ${this.utilisateur.nomComplet} votre Montant actuel est ${this.utilisateur.montant} Dh\nChoisissez une option :\nDéconnexion\nRetrait d'argent\nDéposer de l'argent\nPrendre un crédit\nInvestir\nHistorique`).toLowerCase()
         }
         console.log("Vous êtes déconnecté")
         alert("Vous êtes déconnecté")
@@ -200,22 +203,23 @@ class Banque {
             this.utilisateur.historique.push({ type: "Retrait", montant: montant });
             alert("Retrait réussi ")
             console.log("Retrait réussi ")
+            console.log(`votre montant actuel est ${this.utilisateur.montant}` )
         } else {
             alert("Montant insuffisant ")
-            console.log("Montant insuffisant ")
+
         }
     }
-//   ! credit
+    //   ! credit
     credit() {
         if (this.utilisateur.credit > 0) {
-           console.log(("Vous avez déjà un crédit en cours. Vous ne pouvez pas en prendre un autre."))
+            console.log(("Vous avez déjà un crédit en cours. Vous ne pouvez pas en prendre un autre."))
             return
         }
-        
+
         let montantCreditPossible = this.utilisateur.montant * 0.2
         let montantCredit = parseFloat(prompt(`Vous pouvez demander un crédit allant jusqu'à ${montantCreditPossible} dh. Entrez le montant du crédit souhaité :`))
-        
-        if (typeof montantCredit !=='number' || montantCredit <= 0 || montantCredit > montantCreditPossible) {
+
+        if (typeof montantCredit !== 'number' || montantCredit <= 0 || montantCredit > montantCreditPossible) {
             alert("Montant de crédit invalide. Veuillez entrer un montant valide.")
             return
         }
@@ -225,38 +229,38 @@ class Banque {
         this.utilisateur.historique.push({ type: "Crédit", montant: montantCredit })
         console.log((`Crédit de ${montantCredit} dh accordé  Votre nouveau solde est ${this.utilisateur.montant} dh.`))
     }
-//*    depose d'argent
-    depotDargent(){
+    //*    depose d'argent
+    depotDargent() {
         let montant = parseFloat(prompt("Entrez le montant à déposer :"))
 
-    if ((/\s+/g, '').length !== montant.length   || parseInt(montant) == 0||parseInt(montant)> 1000 || typeof montant !== 'number') {
-       if ((/\s+/g, '').length !== montant.length ) {
-        console.log(" le mondant ne doit pas contient des espace")
-       }
-       if (typeof montant !=='number') {
-        console.log(" le mondant  doit contient juste des chiffre")
-       } 
-       if (parseInt(montant) == 0) {
-        console.log(" le mondant ne doit pas egale 0")
-       } 
-       if (parseInt(montant)> 1000) {
-        console.log(" le mondant depasse 1000")
-       }
-       
-    }
+        if ((/\s+/g, '').length !== montant.length || parseInt(montant) == 0 || parseInt(montant) > 1000 || typeof montant !== 'number') {
+            if ((/\s+/g, '').length !== montant.length) {
+                console.log(" le mondant ne doit pas contient des espace")
+            }
+            if (typeof montant !== 'number') {
+                console.log(" le mondant  doit contient juste des chiffre")
+            }
+            if (parseInt(montant) == 0) {
+                console.log(" le mondant ne doit pas egale 0")
+            }
+            if (parseInt(montant) > 1000) {
+                console.log(" le mondant depasse 1000")
+            }
 
-    if (parseInt(montant) <= 1000 ) {
-        this.utilisateur.montant += montant
-        this.utilisateur.historique.push({ type: "Dépôt", montant: montant })
-        alert(`Vous avez déposé ${montant} Dhv otre Nouveau soldeEST ${this.utilisateur.montant} dh.`)
-        console.log(`Dépôt de ${montant} Dh votre Nouveau solde est ${this.utilisateur.montant} Dh.`)
-    } else {
-        alert("Montant dépassant  1000 Dh.")
-    }
+        }
+
+        if (parseInt(montant) <= 1000) {
+            this.utilisateur.montant += montant
+            this.utilisateur.historique.push({ type: "Dépôt", montant: montant })
+            alert(`Vous avez déposé ${montant} Dhv otre Nouveau soldeEST ${this.utilisateur.montant} dh.`)
+            console.log(`Dépôt de ${montant} Dh votre Nouveau solde est ${this.utilisateur.montant} Dh.`)
+        } else {
+            alert("Montant dépassant  1000 Dh.")
+        }
     }
     afficherHistorique() {
-        let historique = this.utilisateur.historique.map((ele, index) => `${index + 1}. ${ele.type} : ${ele.montant} Dh`).join(' ')
-        alert(`Historique des transactions est ${historique}`)
+        let historique = this.utilisateur.historique.map((ele) => ` ${ele.type} : ${ele.montant} Dh`).join(' ')
+        alert(`Historique d'utilisateur' est ${historique}`)
     }
 }
 //**  menu li fih ga3 les choix f la premiére page
@@ -282,3 +286,4 @@ const menuPrincipal = () => {
 }
 
 menuPrincipal()
+console.log(dataBase);
