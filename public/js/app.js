@@ -1,6 +1,7 @@
 let dataBase = [
-    { nomcomplet: "Ismail Horre", email: "ismail5@email.com", age: 23, motPasse: "1666@38", montant: 900, historique: [], credit: 0 }
-];
+    { nomcomplet: "Ismail Horre", email: "ismail5@email.com", age: 23, motPasse: "1666@38", montant: 900, historique: [], credit: 0 },
+    { nomcomplet: "Basma Jamaldine", email: "basma@email.com", age: 22, motPasse: "basma123@", montant: 400, historique: [], credit: 0 }
+]
 
 class Utilisateur {
     constructor(nomComplet, email, age, motPasse) {
