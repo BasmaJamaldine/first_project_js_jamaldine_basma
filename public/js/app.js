@@ -258,9 +258,32 @@ class Banque {
             alert("Montant dépassant  1000 Dh.")
         }
     }
+    investir() {
+        let montantInvestissement = parseFloat(prompt("Entrez le montant à investir "))
+        if (typeof montantInvestissement !== 'number' || montantInvestissement <= 0) {
+            alert("Montant d'investissement invalide Assurez-vous que le montant est supérieur à 0.")
+            return
+        }
+        if (montantInvestissement > this.utilisateur.montant) {
+            alert("Vous n'avez pas assez de d'argent pour cet investissement.")
+            return
+        }
+        this.utilisateur.montant -= montantInvestissement
+        this.utilisateur.investissement = montantInvestissement
+        this.utilisateur.totalInvestissement = 0
+        this.utilisateur.historique.push({ type: "Investissement", montant: montantInvestissement })
+        alert(`Vous avez investi ${montantInvestissement} Dh. Nouveau solde: ${this.utilisateur.montant} Dh.`)
+        console.log(`Vous avez investi ${montantInvestissement} Dh. Nouveau solde: ${this.utilisateur.montant} Dh.`)
+    }
     afficherHistorique() {
         let historique = this.utilisateur.historique.map((ele) => ` ${ele.type} : ${ele.montant} Dh`).join(' ')
         alert(`Historique d'utilisateur' est ${historique}`)
+        if (this.utilisateur.historique.length === 0) {
+            alert("Aucune transaction enregistrée");
+            return;
+        }
+
+       
     }
 }
 //**  menu li fih ga3 les choix f la premiére page
