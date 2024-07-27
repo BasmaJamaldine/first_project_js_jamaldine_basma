@@ -279,8 +279,11 @@ class Banque {
     afficherHistorique() {
         let historique = this.utilisateur.historique.map((ele) => ` ${ele.type} : ${ele.montant} Dh`).join(' ')
         alert(`Historique d'utilisateur' est ${historique}`)
+             console.log(`Historique d'utilisateur' est ${historique}`)
+        
         if (this.utilisateur.historique.length === 0) {
-            alert("Aucune transaction enregistrée");
+            alert("Aucune transaction enregistrée")
+            console.log("Aucune transaction enregistrée")
             return;
         }
 
